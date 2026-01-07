@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Integer, ForeignKey
+from sqlalchemy import String, Boolean, Integer, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+import enum
 
 db = SQLAlchemy()
 
@@ -36,9 +37,14 @@ class Comment(db.Model):
     post_id: Mapped[int] = mapped_column(ForeignKey('post.post_id'))
     post: Mapped['Post'] = relationship(back_populates='comments')
 
+class MediaType(enum.Enum):
+    VIDEO = 'video'
+    IMAGEN = 'imagen'
+
 class Media(db.Model):
     __tablename__ = 'media'
     media_id: Mapped[int] = mapped_column(primary_key=True)
+    media_type:Mapped[MediaType] = mapped_column(Enum(MediaType))
     url: Mapped[str] = mapped_column(String(100))
     post_id: Mapped[int] = mapped_column(ForeignKey('post.post_id'))
     post: Mapped['Post'] = relationship(back_populates='media')
